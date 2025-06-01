@@ -1,19 +1,21 @@
-import torch
-import hydra
-from omegaconf import DictConfig
-from src.models.classifier import SignClassifier
 import os
+
+import hydra
+import torch
+from omegaconf import DictConfig
+
+from src.models.classifier import SignClassifier
 
 
 @hydra.main(config_path="../configs", config_name="config", version_base=None)
 def main(cfg: DictConfig):
-    # 📥 Загружаем модель из чекпоинта
+    # Загружаем модель из чекпоинта
     model = SignClassifier.load_from_checkpoint(
         cfg.checkpoint_path,
         model_name=cfg.model.model_name,
         num_classes=cfg.model.num_classes,
         lr=cfg.learning_rate,
-        pretrained=False
+        pretrained=False,
     )
     model.eval()
 
@@ -34,7 +36,7 @@ def main(cfg: DictConfig):
         do_constant_folding=True,
         input_names=["input"],
         output_names=["output"],
-        dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}}
+        dynamic_axes={"input": {0: "batch_size"}, "output": {0: "batch_size"}},
     )
 
     print(f"ONNX модель сохранена в: {onnx_path}")
