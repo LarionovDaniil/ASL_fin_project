@@ -1,0 +1,14 @@
+batch_size: 32
+max_epochs: 10
+learning_rate: 0.0001
+num_workers: 4
+val_split: 0.2
+seed: 42
+mlflow_uri: "http://127.0.0.1:8080"
+
+data_csv_path: "data/train.csv"
+images_dir: "data/images/images/train"
+
+mlflow:
+  tracking_uri: "http://127.0.0.1:8080"
+  experiment_name: "sign-gesture"

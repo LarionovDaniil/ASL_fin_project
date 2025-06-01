@@ -1,0 +1,5 @@
+defaults:
+  - train: default
+  - model: default
+  - infer: default
+  - mlflow: default

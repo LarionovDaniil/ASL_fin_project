@@ -1,0 +1,3 @@
+model_name: tf_efficientnetv2_s.in1k
+num_classes: 20
+pretrained: true
