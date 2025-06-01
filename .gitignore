@@ -62,7 +62,7 @@ coverage.xml
 
 # DVC
 *.dvc
-.dvc/
+!.dvc
 .dvc/tmp/
 .dvc/cache/
 
