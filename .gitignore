@@ -61,7 +61,6 @@ coverage.xml
 .idea/
 
 # DVC
-*.dvc
 !.dvc
 .dvc/tmp/
 .dvc/cache/

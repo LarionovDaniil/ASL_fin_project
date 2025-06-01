@@ -1,3 +1,3 @@
 output_dir: "outputs/"
-image_path: "data/images/images/test/003a97d7ca88c5fe85b7b2d812705f10.jpg"
+image_dir: "data/images/images/test"
 checkpoint_path: "checkpoints/best-checkpoint.ckpt"

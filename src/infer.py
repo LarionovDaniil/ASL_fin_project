@@ -11,7 +11,6 @@ from src.models.classifier import SignClassifier
 
 @hydra.main(config_path="../configs", config_name="config", version_base=None)
 def main(cfg: DictConfig):
-    # Расшифровка классов
     decoding_dict = {
         0: "Number 1",
         1: "Number 2",
@@ -35,16 +34,14 @@ def main(cfg: DictConfig):
         19: "Letter Y",
     }
 
-    # Проверка путей
-    image_path = Path(cfg.infer.image_path).resolve()
-    checkpoint_path = Path(cfg.infer.checkpoint_path).resolve()
+    image_dir = Path(cfg.infer.image_dir)
+    checkpoint_path = Path(cfg.infer.checkpoint_path)
 
-    if not image_path.exists():
-        raise FileNotFoundError(f"Изображение не найдено: {image_path}")
+    if not image_dir.exists():
+        raise FileNotFoundError(f"Папка не найдена: {image_dir}")
     if not checkpoint_path.exists():
         raise FileNotFoundError(f"Чекпойнт не найден: {checkpoint_path}")
 
-    # Трансформации
     transform = transforms.Compose(
         [
             transforms.Resize((224, 224)),
@@ -52,11 +49,6 @@ def main(cfg: DictConfig):
         ]
     )
 
-    # Подготовка изображения
-    image = Image.open(image_path).convert("RGB")
-    input_tensor = transform(image).unsqueeze(0)
-
-    # Загрузка модели
     model = SignClassifier.load_from_checkpoint(
         checkpoint_path,
         model_name=cfg.model.model_name,
@@ -66,18 +58,22 @@ def main(cfg: DictConfig):
     )
     model.eval()
 
-    # Отправляем модель и данные на один и тот же девайс
-    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-    model.to(device)
-    input_tensor = input_tensor.to(device)
+    # Прогон по всем картинкам
+    image_paths = list(image_dir.glob("*.jpg")) + list(image_dir.glob("*.png"))
+    if not image_paths:
+        print("В папке нет изображений .jpg или .png")
+        return
 
-    # Предсказание
-    with torch.no_grad():
-        output = model(input_tensor)
-        pred_idx = output.argmax(dim=1).item()
-        class_name = decoding_dict[pred_idx]
+    for img_path in image_paths:
+        image = Image.open(img_path).convert("RGB")
+        input_tensor = transform(image).unsqueeze(0)
 
-    print(f"Предсказано: {class_name} (index: {pred_idx})")
+        with torch.no_grad():
+            output = model(input_tensor)
+            pred_idx = output.argmax(dim=1).item()
+            class_name = decoding_dict[pred_idx]
+
+        print(f"{img_path.name}: {class_name} (index: {pred_idx})")
 
 
 if __name__ == "__main__":

@@ -7,6 +7,3 @@ stages:
       - images/images/train
     outs:
       - checkpoints/
-    mlflow:
-      cmd: mlflow ui --port 8080
-      deps: []
