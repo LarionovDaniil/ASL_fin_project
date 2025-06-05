@@ -65,7 +65,6 @@ class SignModelWrapper(mlflow.pyfunc.PythonModel):
 
 
 if __name__ == "main":
-    # путь к сохранённому чекпойнту модели
     checkpoint_path = "checkpoints/best-checkpoint.ckpt"
 
     example_df = pd.DataFrame(
@@ -76,7 +75,6 @@ if __name__ == "main":
         }
     )
 
-    # Сохраняем модель для serving
     mlflow.pyfunc.save_model(
         path="mlruns_model/sign_model",
         python_model=SignModelWrapper(),
