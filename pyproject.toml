@@ -17,6 +17,7 @@ dvc = "^3.50.1"
 dvc-gdrive = "^2.20.0"  # если используешь Google Drive
 omegaconf = "^2.3.0"
 numpy = "^1.26"
+onnx = "^1.16.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.7.0"

@@ -12,7 +12,6 @@ from src.models.classifier import SignClassifier
 @hydra.main(config_path="../configs", config_name="config", version_base=None)
 def main(cfg: DictConfig):
     seed_everything(cfg.train.seed)
-    print(f"Seed set to {cfg.train.seed}")
 
     # Устанавливаем MLflow URI и эксперимент
     mlflow.set_tracking_uri(cfg.train.mlflow.tracking_uri)
@@ -60,6 +59,7 @@ def main(cfg: DictConfig):
         callbacks=[checkpoint_callback],
     )
 
+    print("Модель начала обучаться.")
     trainer.fit(model, datamodule=datamodule)
 
 

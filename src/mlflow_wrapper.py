@@ -1,5 +1,7 @@
 import mlflow.pyfunc
+import pandas as pd
 import torch
+from mlflow.models.signature import infer_signature
 from PIL import Image
 from torchvision import transforms
 
@@ -29,12 +31,58 @@ class SignModelWrapper(mlflow.pyfunc.PythonModel):
         )
 
     def predict(self, context, model_input):
-        # model_input — путь к изображению или PIL.Image
-        image = Image.open(model_input.iloc[0]).convert("RGB")
+        decoding_dict = {
+            0: "Number 1",
+            1: "Number 2",
+            2: "Number 3",
+            3: "Number 4",
+            4: "Number 5",
+            5: "Letter A",
+            6: "Letter B",
+            7: "Letter C",
+            8: "Letter D",
+            9: "Letter F",
+            10: "Letter G",
+            11: "Letter H",
+            12: "Letter I",
+            13: "Letter J",
+            14: "Letter K",
+            15: "Letter L",
+            16: "Letter R",
+            17: "Letter S",
+            18: "Letter W",
+            19: "Letter Y",
+        }
+        image_path = model_input.iloc[0, 0]
+        image = Image.open(image_path).convert("RGB")
         tensor = self.transform(image).unsqueeze(0).to(self.device)
 
         with torch.no_grad():
             output = self.model(tensor)
             pred = output.argmax(dim=1).item()
 
-        return [pred]
+        return decoding_dict[pred]
+
+
+if __name__ == "main":
+    # путь к сохранённому чекпойнту модели
+    checkpoint_path = "checkpoints/best-checkpoint.ckpt"
+
+    example_df = pd.DataFrame(
+        {
+            "image_path": [
+                "data_storage/images/images/test/0ab99c38c46c01f05cdb8f63690a9a4e.jpg"
+            ]
+        }
+    )
+
+    # Сохраняем модель для serving
+    mlflow.pyfunc.save_model(
+        path="mlruns_model/sign_model",
+        python_model=SignModelWrapper(),
+        artifacts={"checkpoint_path": checkpoint_path},
+        signature=infer_signature(example_df),
+        input_example=example_df,
+    )
+
+    print("Модель сохранена в формате MLflow PyFunc и готова к деплою.")

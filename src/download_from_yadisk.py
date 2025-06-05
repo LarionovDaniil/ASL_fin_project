@@ -6,7 +6,7 @@ import requests
 
 def download_and_extract_nested_zip():
     zip_path = Path("asl_data_outer.zip")
-    extract_path = Path("data")
+    extract_path = Path("data_storage")
 
     if extract_path.exists():
         print("Данные уже распакованы. Пропускаем загрузку.")
@@ -42,7 +42,7 @@ def download_and_extract_nested_zip():
 
     # Шаг 5: очистка
     zip_path.unlink()  # удалить внешний zip
-    print("Всё готово! Данные лежат в папке 'data/'.")
+    print("Всё готово! Данные лежат в папке 'data_storage/'.")
 
 
 if __name__ == "__main__":

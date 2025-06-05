@@ -9,15 +9,15 @@ from torchvision import transforms
 
 
 class SignLanguageDataset(Dataset):
-    def __init__(self, dataframe, images_dir, transform=None):
+    def init(self, dataframe, images_dir, transform=None):
         self.df = dataframe
         self.images_dir = Path(images_dir)
         self.transform = transform
 
-    def __len__(self):
+    def len(self):
         return len(self.df)
 
-    def __getitem__(self, idx):
+    def getitem(self, idx):
         row = self.df.iloc[idx]
         image_path = self.images_dir / row["id"]
         label = row["label"]
@@ -28,7 +28,7 @@ class SignLanguageDataset(Dataset):
 
 
 class SignDataModule(pl.LightningDataModule):
-    def __init__(
+    def init(
         self,
         data_csv_path="train.csv",
         images_dir="images/images/train",
@@ -37,7 +37,7 @@ class SignDataModule(pl.LightningDataModule):
         val_split=0.2,
         seed=42,
     ):
-        super().__init__()
+        super().init()
         self.data_csv_path = data_csv_path
         self.images_dir = images_dir
         self.batch_size = batch_size

@@ -7,7 +7,7 @@ def download_data():
     """
     print("Загружаем данные через DVC...")
     try:
-        subprocess.run(["dvc", "pull"], check=True)
+        subprocess.run(["dvc", "pull", "data.dvc"], check=True)
         print("Данные успешно загружены.")
     except subprocess.CalledProcessError:
         print("Ошибка при выполнении dvc pull.")
