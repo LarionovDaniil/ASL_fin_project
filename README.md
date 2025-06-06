@@ -62,7 +62,7 @@ poetry run python src/download_from_yadisk.py
 poetry run mlflow ui --port 8080
 ```
 
-3. Тренировка модели
+1. Тренировка модели
 
 ```
 poetry run python src/train.py --config-name config
