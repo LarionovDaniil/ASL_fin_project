@@ -72,7 +72,7 @@ poetry run python src/train.py --config-name config
 
 1. Сохранение модели. Модель сохраняется в формате PyFunc: mlruns_model/sign_model/
 ```
-poetry run python mlflow_wrapper.py
+poetry run python src/mlflow_wrapper.py
 ```
 2. Запуск сервера
 ```
