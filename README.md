@@ -17,6 +17,12 @@
 - Поддерживаются этапы тренировки, инференса и конвертации в ONNX
 - Используются Hydra, DVC, MLflow, pre-commit и Poetry
 
+Train – 2000 фото jpg формата
+Test – 1504 фото jpg формата
+https://www.kaggle.com/competitions/sign-language-image-classification/overview
+Данные с соревнования Kaggle по классификации знаков в языке жестов.
+
+
 ## Setup
 
 1. Установи Poetry (если ещё нет):
@@ -28,10 +34,11 @@ curl -sSL https://install.python-poetry.org | python3 -
 2. Клонируй репозиторий и установи зависимости:
 
 ```
-git clone https://github.com/<твой-ник>/sign-language-classifier.git
-cd sign-language-classifier
+git clone git@github.com:LarionovDaniil/ASL_fin_project.git
+cd ASL_fin_project
+
+poetry env use "путь до python.exe версии 3.9"
 poetry install
-poetry shell
 ```
 
 3. Установи pre-commit и прогоните хуки:
@@ -39,39 +46,64 @@ poetry shell
 ```
 poetry run pre-commit install
 poetry run pre-commit run -a
-
-
 ```
 
-4. Восстанови данные (через DVC):
+## Train
+
+1. Скачай данные:
 
 ```
-dvc pull
+poetry run python src/download_from_yadisk.py
 ```
 
-5. Тренировка модели
+2. MLflow
 
 ```
-python src/train.py
+poetry run mlflow ui --port 8080
 ```
 
-6. Инференс
+3. Тренировка модели
 
 ```
-python src/infer.py image=path/to/image.jpg
+poetry run python src/train.py --config-name config
 ```
 
-## Подготовка к продакшену
+## Production preparation
 
+1. Сохранение модели. Модель сохраняется в формате PyFunc: mlruns_model/sign_model/
 ```
-python src/convert.py --checkpoint path/to/checkpoint.ckpt
+poetry run python mlflow_wrapper.py
 ```
+2. Запуск сервера
+```
+poetry run mlflow models serve -m mlruns_model/sign_model --no-conda -p 5000
+```
+
+## Infer
+1. Запрос
+Пример запроса:
+Прописать абсолютный путь.
+```
+curl -X POST http://127.0.0.1:5000/invocations   -H "Content-Type: application/json"   -d '{
+    "inputs": [
+      {"image_path": "C:...ASL_fin_project\\\\data_storage\\\\images\\\\images\\\\test\\\\0ac0bb2730eb3123cdf48ba8fc5dcfe5.jpg"}
+    ]
+  }'
+```
+
+(Опционально) Работа модели на папке с фото, путь лежит в configs/infer/default.yaml
+```
+poetry run python src/infer.py
+```
+
 
 ### Логирование
 
-Для локального трекинга моделей используется MLflow.
+Для трекинга моделей используется MLflow.
 
 адрес по умолчанию: http://127.0.0.1:8080
+
+Графики и логи также сохраняются в папку plots
 
 ## Зависимости
 

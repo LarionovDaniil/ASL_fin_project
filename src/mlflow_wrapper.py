@@ -64,7 +64,7 @@ class SignModelWrapper(mlflow.pyfunc.PythonModel):
         return decoding_dict[pred]
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     checkpoint_path = "checkpoints/best-checkpoint.ckpt"
 
     example_df = pd.DataFrame(

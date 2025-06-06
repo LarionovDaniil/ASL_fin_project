@@ -11,8 +11,8 @@ from torchmetrics import Accuracy
 
 
 class SignClassifier(LightningModule):
-    def init(self, model_name, num_classes, lr, pretrained):
-        super().init()
+    def __init__(self, model_name, num_classes, lr, pretrained):
+        super().__init__()
 
         self.save_hyperparameters()
 
