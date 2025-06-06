@@ -109,6 +109,6 @@ poetry run python src/infer.py
 
 Все зависимости управляются Poetry. Основные:
 
-torch, pytorch-lightning, timm, hydra-core
+torch, pytorch-lightning, hydra-core
 
-mlflow, dvc, pre-commit, black, flake8, isort
+mlflow, pre-commit, black, flake8, isort
